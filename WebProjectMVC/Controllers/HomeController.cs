@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using WebProjectMVC.Models;
+using WebProjectMVC.Models.ViewModels;
 
 namespace WebProjectMVC.Controllers
 {
