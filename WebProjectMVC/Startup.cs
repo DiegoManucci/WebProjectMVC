@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WebProjectMVC.Data;
+using WebProjectMVC.Services;
 
 namespace WebProjectMVC
 {
@@ -40,6 +41,7 @@ namespace WebProjectMVC
                     options.UseMySql(Configuration.GetConnectionString("WebProjectMVCContext"), builder => builder.MigrationsAssembly("WebProjectMVC")));
 
             services.AddScoped<SeedingService>();
+            services.AddScoped<SellerService>();
 
         }
 
