@@ -21,7 +21,7 @@ namespace WebProjectMVC.Data
         {
             if(_context.Department.Any() || _context.Seller.Any() || _context.SalesRecord.Any())
             {
-                //return; //DB has been seeded
+                return; //DB has been seeded
             }
 
             Department department1 = new Department(1, "Computers");
