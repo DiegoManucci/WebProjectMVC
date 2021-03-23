@@ -38,14 +38,18 @@ namespace WebProjectMVC
 
             services.AddDbContext<WebProjectMVCContext>(options =>
                     options.UseMySql(Configuration.GetConnectionString("WebProjectMVCContext"), builder => builder.MigrationsAssembly("WebProjectMVC")));
+
+            services.AddScoped<SeedingService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, SeedingService seedingService)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                seedingService.Seed();
             }
             else
             {
