@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using WebProjectMVC.Data;
 using WebProjectMVC.Models;
 
@@ -24,7 +25,7 @@ namespace WebProjectMVC.Services
 
         public Seller FindById(int id)
         {
-            return _context.Seller.FirstOrDefault(obj => obj.Id == id);
+            return _context.Seller.Include(seller => seller.Department).FirstOrDefault(obj => obj.Id == id);
         }
 
         public void Remove(int id)
