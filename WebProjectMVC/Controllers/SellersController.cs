@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using WebProjectMVC.Models;
 using WebProjectMVC.Models.ViewModels;
 using WebProjectMVC.Services;
@@ -47,14 +49,14 @@ namespace WebProjectMVC.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new {message = "Id Not Provided"});
             }
 
             var obj = _sellerService.FindById(id.Value);
 
             if (obj == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id Not Found" });
             }
 
             return View(obj);
@@ -72,14 +74,14 @@ namespace WebProjectMVC.Controllers
         {
             if(id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id Not Provided" });
             }
 
             var seller = _sellerService.FindById(id.Value);
 
             if(seller == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id Not Found" });
             }
 
             return View(seller);
@@ -89,14 +91,14 @@ namespace WebProjectMVC.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id Not Provided" });
             }
 
             var seller = _sellerService.FindById(id.Value);
 
             if (seller == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id Not Found" });
             }
 
             List<Department> departments = _departmentService.FindAll();
@@ -111,7 +113,7 @@ namespace WebProjectMVC.Controllers
         {
             if (id != seller.Id)
             {
-                return BadRequest();
+                return RedirectToAction(nameof(Error), new { message = "Id Mismatch" });
             }
 
             try
@@ -119,14 +121,26 @@ namespace WebProjectMVC.Controllers
                 _sellerService.Update(seller);
                 return RedirectToAction(nameof(Index));
             }
-            catch (NotFoundException)
+            catch (NotFoundException e)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message =  e.Message });
             }
-            catch (DBConcurrencyException)
+            catch (DBConcurrencyException e)
             {
-                return BadRequest();
+                return RedirectToAction(nameof(Error), new { message = e.Message });
             }
         }
+
+        public IActionResult Error(string message)
+        {
+            var viewModel = new ErrorViewModel
+            {
+                Message = message,
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+
+            return View(viewModel);
+        }
+
     }
 }
