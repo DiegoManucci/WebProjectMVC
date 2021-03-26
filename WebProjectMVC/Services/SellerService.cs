@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WebProjectMVC.Data;
 using WebProjectMVC.Models;
+using WebProjectMVC.Services.Exceptions;
 
 namespace WebProjectMVC.Services
 {
@@ -38,6 +40,24 @@ namespace WebProjectMVC.Services
         public List<Seller> FindAll()
         {
             return _context.Seller.ToList();
+        }
+
+        public void Update(Seller seller)
+        {
+            if(!_context.Seller.Any(x => x.Id == seller.Id))
+            {
+                throw new NotFoundException("Id not found");
+            }
+
+            try
+            {
+                _context.Update(seller);
+                _context.SaveChanges();
+            }
+            catch(DbUpdateConcurrencyException e)
+            {
+                throw new DBConcurrencyException(e.Message);
+            }
         }
 
     }
