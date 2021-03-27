@@ -121,13 +121,9 @@ namespace WebProjectMVC.Controllers
                 _sellerService.Update(seller);
                 return RedirectToAction(nameof(Index));
             }
-            catch (NotFoundException e)
+            catch (ApplicationException e)
             {
                 return RedirectToAction(nameof(Error), new { message =  e.Message });
-            }
-            catch (DBConcurrencyException e)
-            {
-                return RedirectToAction(nameof(Error), new { message = e.Message });
             }
         }
 
